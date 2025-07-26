@@ -40,6 +40,7 @@ ville = st.text_input(t("Commune", "City"))
 pays = st.text_input(t("Pays", "Country"))
 telephone = st.text_input(t("Téléphone", "Phone"))
 email = st.text_input("E-mail")
+nom_client = st.text_input(t("Nom du client", "Client name"))
 nb_pers = st.number_input(t("Nombre de personnes", "Number of people"), min_value=1, value=2)
 niveau = st.text_input(t("Niveau scolaire (le cas échéant)", "School level (if applicable)"))
 capacite_max = st.number_input(t("Capacité max de visite", "Max group capacity"), min_value=1, value=30)
@@ -131,6 +132,7 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Pays": pays,
         "Téléphone": telephone,
         "Email": email,
+        "Nom client": nom_client,
         "Nombre de personnes": nb_pers,
         "Niveau scolaire": niveau,
         "Langue de la visite": langue_visite,
@@ -145,17 +147,17 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Détails VIP": vip_details,
         "Type de prestation": type_guide,
         "Tarif guidage HT": tarif_ht1,
-        "TVA guidage (%)": tva1,
+        "Taux TVA guidage (%)": tva1,
         "Montant TVA guidage (€)": montant_tva1,
         "Tarif chauffeur HT": tarif_ht2,
-        "TVA chauffeur (%)": tva2,
+        "Taux TVA chauffeur (%)": tva2,
         "Montant TVA chauffeur (€)": montant_tva2,
         "Durée estimée (h)": duree,
         "Tarif TTC": tarif_ttc
     }
 
     df = pd.DataFrame([infos])
-    file_name = "formulaire_nettoye.xlsx"
+    file_name = f"{reference}_{nom_client.replace(" ", "_")}.xlsx" if reference and nom_client else "formulaire_nettoye.xlsx"
     df.to_excel(file_name, index=False)
     with open(file_name, "rb") as f:
         st.download_button(label=t("📥 Télécharger le fichier", "📥 Download file"),
