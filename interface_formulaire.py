@@ -1,3 +1,4 @@
+langue_ui = "Français"  # Valeur par défaut en cas de bug
 
 import streamlit as st
 from fpdf import FPDF
@@ -32,7 +33,6 @@ detail_programme = st.text_area("Champ libre programme")
 
 
 # Listes bilingues pour le programme
-programme_fr = [
     "Plages du Débarquement (secteur US)",
     "Plages du Débarquement (secteur GB)",
     "Plages du Débarquement (secteur Canadien)",
@@ -43,7 +43,6 @@ programme_fr = [
     "Autre"
 ]
 
-programme_en = [
     "D-Day beaches (US sector)",
     "D-Day beaches (British sector)",
     "D-Day beaches (Canadian sector)",
@@ -55,7 +54,6 @@ programme_en = [
 ]
 
 # Listes bilingues pour le programme
-programme_fr = [
     "Plages du Débarquement (secteur US)",
     "Plages du Débarquement (secteur GB)",
     "Plages du Débarquement (secteur Canadien)",
@@ -65,7 +63,6 @@ programme_fr = [
     "Médiéval",
     "Autre"
 ]
-programme_fr = [
     "Plages du Débarquement (secteur US)",
     "Plages du Débarquement (secteur GB)",
     "Plages du Débarquement (secteur Canadien)",
@@ -75,7 +72,6 @@ programme_fr = [
     "Médiéval",
     "Autre"
 ]
-programme_en = [
     "D-Day beaches (US sector)",
     "D-Day beaches (British sector)",
     "D-Day beaches (Canadian sector)",
