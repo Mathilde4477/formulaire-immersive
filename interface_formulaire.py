@@ -54,6 +54,27 @@ programme_en = [
     "Other"
 ]
 
+# Listes bilingues pour le programme
+programme_fr = [
+    "Plages du Débarquement (secteur US)",
+    "Plages du Débarquement (secteur GB)",
+    "Plages du Débarquement (secteur Canadien)",
+    "Plages du Débarquement (US/GB)",
+    "Mont Saint Michel",
+    "Vieux Bayeux et Cathédrale",
+    "Médiéval",
+    "Autre"
+]
+programme_en = [
+    "D-Day beaches (US sector)",
+    "D-Day beaches (British sector)",
+    "D-Day beaches (Canadian sector)",
+    "D-Day beaches (US/GB)",
+    "Mont Saint Michel",
+    "Old Bayeux and Cathedral",
+    "Medieval",
+    "Other"
+]
 programme = st.selectbox("Programme", programme_fr if langue_ui == "Français" else programme_en)
 
 
