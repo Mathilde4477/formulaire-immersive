@@ -119,7 +119,7 @@ ligne = {
 # Export Excel
 if st.button("Exporter vers Excel"):
     df = pd.DataFrame([ligne])
-    df = df[['Date de la demande', 'Référence', 'Date de la visite', 'Titre', 'Nom', 'Prénom', 'Adresse', 'Adresse 2', 'Code postal', 'Commune', 'Pays', 'Téléphone', 'Email', 'Nom clients', 'Niveau scolaire', 'Nombre de personnes', 'Capacité max', 'Langue', 'Programme', 'Détail programme', 'Heure de début', 'Lieu de début', 'Heure de fin', 'Lieu de fin', 'Durée', 'Tarif guidage HT', 'TVA guidage (20%)', 'Tarif chauffeur HT', 'TVA chauffeur (10%)', 'Tarif TTC', 'VIP', 'Texte VIP']]
+    df = df[['Date de la demande', 'Référence', 'Date de la visite', 'Institution', 'Titre', 'Nom', 'Prénom', 'Adresse', 'Adresse 2', 'Code postal', 'Commune', 'Pays', 'Téléphone', 'Email', 'Nom clients', 'Niveau scolaire', 'Nombre de personnes', 'Capacité max', 'Langue', 'Programme', 'Détail programme', 'Heure de début', 'Lieu de début', 'Heure de fin', 'Lieu de fin', 'Durée', 'Tarif guidage HT', 'TVA guidage (20%)', 'Tarif chauffeur HT', 'TVA chauffeur (10%)', 'Tarif TTC', 'VIP', 'Texte VIP']]
     fichier_excel = "formulaire_complet.xlsx"
     df.to_excel(fichier_excel, index=False)
     with open(fichier_excel, "rb") as f:
