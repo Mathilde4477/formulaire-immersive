@@ -1,4 +1,3 @@
-import os
 from fpdf import FPDF
 import streamlit as st
 import pandas as pd
