@@ -84,6 +84,7 @@ ligne = {
     "Date de la demande": formater_date_fr(date_demande),
     "Référence": reference,
     "Date de la visite": formater_date_fr(date_visite),
+    "Institution": institution, 
     "Titre": titre,
     "Nom": nom,
     "Prénom": prenom,
