@@ -142,7 +142,7 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
     pdf.cell(200, 10, txt="Récapitulatif de la demande Immersive Normandy", ln=True, align='C')
     pdf.ln(10)
 
-    for key, value in infos.items():
+    for key, value in data.items():
         pdf.multi_cell(0, 10, txt=f"{key} : {value}")
 
     # Nom de base du fichier PDF selon les informations
