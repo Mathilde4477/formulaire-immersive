@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import datetime
 import locale
-locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+locale.setlocale(locale.LC_TIME, 'French_France.1252')
 
 date_demande = st.date_input("📅 Date de la demande", value=datetime.date.today())
 date_visite = st.date_input("📆 Date de la visite")
