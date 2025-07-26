@@ -6,6 +6,16 @@ st.set_page_config(page_title="Formulaire de réservation", layout="centered")
 
 st.title("📋 Formulaire de réservation Immersive Normandy")
 
+
+def select_time(label):
+    col_h, col_m = st.columns([2, 1])
+    with col_h:
+        hour = st.selectbox(f"{label} - heure", [f"{i:02}" for i in range(0, 24)], key=f"{label}_h")
+    with col_m:
+        minute = st.selectbox(f"{label} - minute", ["00", "15", "30", "45"], key=f"{label}_m")
+    return f"{hour}:{minute}"
+
+
 langue = st.radio("Langue / Language", ["Français", "English"])
 
 def t(fr, en):
@@ -32,6 +42,7 @@ telephone = st.text_input(t("Téléphone", "Phone"))
 email = st.text_input("E-mail")
 nb_pers = st.number_input(t("Nombre de personnes", "Number of people"), min_value=1, value=2)
 niveau = st.text_input(t("Niveau scolaire (le cas échéant)", "School level (if applicable)"))
+capacite_max = st.number_input(t("Capacité max de visite", "Max group capacity"), min_value=1, value=30)
 langue_visite = st.selectbox(t("Langue de la visite", "Tour language"), ["Français", "Anglais", "Allemand", "Espagnol", "Autre"])
 
 # Programme
@@ -53,10 +64,10 @@ st.markdown("### " + t("Horaires de la visite", "Tour schedule"))
 
 col3, col4 = st.columns(2)
 with col3:
-    h_debut = st.text_input(t("Heure de début", "Start time"))
+    h_debut = select_time(t("Heure de début", "Start time"))
     lieu_debut = st.text_input(t("Lieu de début", "Start location"))
 with col4:
-    h_fin = st.text_input(t("Heure de fin", "End time"))
+    h_fin = select_time(t("Heure de fin", "End time"))
     lieu_fin = st.text_input(t("Lieu de fin", "End location"))
 
 # Calcul de durée
@@ -123,6 +134,7 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Nombre de personnes": nb_pers,
         "Niveau scolaire": niveau,
         "Langue de la visite": langue_visite,
+        "Capacité max": capacite_max,
         "Programme": programme,
         "Description programme": description_programme,
         "Heure début": h_debut,
