@@ -1,4 +1,3 @@
-langue_ui = "Français"  # Valeur par défaut en cas de bug
 
 import streamlit as st
 from fpdf import FPDF
@@ -28,61 +27,17 @@ langue = st.selectbox("Langue", ["Français", "Anglais"])
 niveau_scolaire = st.text_input("Niveau scolaire")
 nombre_personnes = st.number_input("Nombre de personnes", min_value=1, step=1)
 capacite_max = st.number_input("Capacité max", min_value=1, step=1)
-
+programme = st.selectbox("Programme", [
+    "Plages du Débarquement (secteur US)", 
+    "Plages du Débarquement (secteur GB)",
+    "Plages du Débarquement (secteur Canadien)",
+    "Plages du Débarquement (US/GB)", 
+    "Mont Saint Michel",
+    "Vieux Bayeux et Cathédrale",
+    "Médiéval",
+    "Autre"
+])
 detail_programme = st.text_area("Champ libre programme")
-
-
-# Listes bilingues pour le programme
-    "Plages du Débarquement (secteur US)",
-    "Plages du Débarquement (secteur GB)",
-    "Plages du Débarquement (secteur Canadien)",
-    "Plages du Débarquement (US/GB)",
-    "Mont Saint Michel",
-    "Vieux Bayeux et Cathédrale",
-    "Médiéval",
-    "Autre"
-]
-
-    "D-Day beaches (US sector)",
-    "D-Day beaches (British sector)",
-    "D-Day beaches (Canadian sector)",
-    "D-Day beaches (US/GB)",
-    "Mont Saint Michel",
-    "Old Bayeux and Cathedral",
-    "Medieval",
-    "Other"
-]
-
-# Listes bilingues pour le programme
-    "Plages du Débarquement (secteur US)",
-    "Plages du Débarquement (secteur GB)",
-    "Plages du Débarquement (secteur Canadien)",
-    "Plages du Débarquement (US/GB)",
-    "Mont Saint Michel",
-    "Vieux Bayeux et Cathédrale",
-    "Médiéval",
-    "Autre"
-]
-    "Plages du Débarquement (secteur US)",
-    "Plages du Débarquement (secteur GB)",
-    "Plages du Débarquement (secteur Canadien)",
-    "Plages du Débarquement (US/GB)",
-    "Mont Saint Michel",
-    "Vieux Bayeux et Cathédrale",
-    "Médiéval",
-    "Autre"
-]
-    "D-Day beaches (US sector)",
-    "D-Day beaches (British sector)",
-    "D-Day beaches (Canadian sector)",
-    "D-Day beaches (US/GB)",
-    "Mont Saint Michel",
-    "Old Bayeux and Cathedral",
-    "Medieval",
-    "Other"
-]
-programme = st.selectbox("Programme", programme_fr if langue_ui == "Français" else programme_en)
-
 
 # Champs horaires
 heure_debut = st.selectbox("Heure de début", [f"{h:02d}:{m:02d}" for h in range(6, 21) for m in range(0, 60, 5)])
