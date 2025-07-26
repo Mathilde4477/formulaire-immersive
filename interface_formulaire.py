@@ -29,29 +29,26 @@ nombre_personnes = st.number_input("Nombre de personnes", min_value=1, step=1)
 capacite_max = st.number_input("Capacité max", min_value=1, step=1)
 
 programme = st.selectbox("Programme",
-    (
-        [
-            "Plages du Débarquement (secteur US)",
-            "Plages du Débarquement (secteur GB)",
-            "Plages du Débarquement (secteur Canadien)",
-            "Plages du Débarquement (US/GB)",
-            "Mont Saint Michel",
-            "Vieux Bayeux et Cathédrale",
-            "Médiéval",
-            "Autre"
-        ] if langue_ui == "Français" else [
-            "D-Day beaches (US sector)",
-            "D-Day beaches (British sector)",
-            "D-Day beaches (Canadian sector)",
-            "D-Day beaches (US/GB)",
-            "Mont Saint Michel",
-            "Old Bayeux and Cathedral",
-            "Medieval",
-            "Other"
-        ]
-    )
+    [
+        "Plages du Débarquement (secteur US)",
+        "Plages du Débarquement (secteur GB)",
+        "Plages du Débarquement (secteur Canadien)",
+        "Plages du Débarquement (US/GB)",
+        "Mont Saint Michel",
+        "Vieux Bayeux et Cathédrale",
+        "Médiéval",
+        "Autre"
+    ] if langue_ui == "Français" else [
+        "D-Day beaches (US sector)",
+        "D-Day beaches (British sector)",
+        "D-Day beaches (Canadian sector)",
+        "D-Day beaches (US/GB)",
+        "Mont Saint Michel",
+        "Old Bayeux and Cathedral",
+        "Medieval",
+        "Other"
+    ]
 )
-
 
 
 import streamlit as st
@@ -83,19 +80,11 @@ langue = st.selectbox("Langue / Language", ["Français", "Anglais"] if langue_ui
 niveau_scolaire = st.text_input("Niveau scolaire")
 nombre_personnes = st.number_input("Nombre de personnes", min_value=1, step=1)
 capacite_max = st.number_input("Capacité max", min_value=1, step=1)
-    "D-Day beaches (US sector)",
-    "D-Day beaches (British sector)",
-    "D-Day beaches (Canadian sector)",
-    "D-Day beaches (US/GB)",
     "Mont Saint Michel",
     "Old Bayeux and Cathedral",
     "Medieval",
     "Other"
     ]
-    "Plages du Débarquement (secteur US)",
-    "Plages du Débarquement (secteur GB)",
-    "Plages du Débarquement (secteur Canadien)",
-    "Plages du Débarquement (US/GB)",
     "Mont Saint Michel",
     "Vieux Bayeux et Cathédrale",
     "Médiéval",
