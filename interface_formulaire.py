@@ -1,98 +1,122 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import locale
 
-st.set_page_config(page_title="Formulaire Immersive Normandy", page_icon="📋")
+st.set_page_config(page_title="Formulaire de réservation", layout="centered")
 
-st.title("📋 Formulaire de réservation")
-st.write("Saisissez les informations du formulaire à générer.")
+st.title("📋 Formulaire de réservation Immersive Normandy")
 
-# Champs de saisie
+# Choix de la langue
+langue = st.radio("Langue / Language", ["Français", "English"])
+
+# Fonctions pour la traduction
+def t(fr, en):
+    return fr if langue == "Français" else en
+
+# Données générales
 col1, col2 = st.columns(2)
-
 with col1:
-    date_demande = st.date_input("Date de la demande", value=datetime.today())
-    reference = st.text_input("Référence", value="REF123")
-    date_visite = st.date_input("Date de la visite")
-    institution = st.text_input("Institution")
-    titre = st.selectbox("Titre", ["Monsieur", "Madame", ""])
-    nom = st.text_input("Nom")
-    prenom = st.text_input("Prénom")
-
+    date_demande = st.date_input(t("Date de la demande", "Request date"))
+    reference = st.text_input("Référence")
 with col2:
-    adresse = st.text_input("Adresse")
-    adresse2 = st.text_input("Adresse (suite)")
-    code_postal = st.text_input("Code postal")
-    commune = st.text_input("Commune")
-    pays = st.text_input("Pays")
-    tel = st.text_input("Téléphone")
-    mail = st.text_input("E-mail")
+    date_visite = st.date_input(t("Date de la visite", "Visit date"))
+    institution = st.text_input(t("Institution / Agence", "Institution / Agency"))
 
-nb_pers = st.number_input("Nombre de personnes", min_value=1, step=1)
-niveau = st.text_input("Niveau scolaire")
-langue = st.selectbox("Langue", ["Français", "Anglais", "Autre"])
-capacite = st.number_input("Capacité max", min_value=1, step=1)
+nom = st.text_input(t("Nom", "Last name"))
+prenom = st.text_input(t("Prénom", "First name"))
+adresse = st.text_input(t("Adresse", "Address"))
+adresse2 = st.text_input("Adresse 2")
+code_postal = st.text_input(t("Code postal", "Zip code"))
+ville = st.text_input(t("Commune", "City"))
+pays = st.text_input(t("Pays", "Country"))
+telephone = st.text_input(t("Téléphone", "Phone"))
+email = st.text_input("E-mail")
+nb_pers = st.number_input(t("Nombre de personnes", "Number of people"), min_value=1, value=2)
+niveau = st.text_input(t("Niveau scolaire (le cas échéant)", "School level (if applicable)"))
+langue_visite = st.selectbox(t("Langue de la visite", "Tour language"), ["Français", "Anglais", "Allemand", "Espagnol", "Autre"])
 
-nom_clients = st.text_input("Nom du groupe / clients")
-h_debut = st.text_input("Heure début", value="10h00")
-lieu_debut = st.text_input("Lieu début")
-h_fin = st.text_input("Heure fin", value="18h00")
-lieu_fin = st.text_input("Lieu fin")
-duree = st.text_input("Durée", value="8h00")
+# Programme de la journée
+st.markdown("### " + t("Programme de la journée", "Tour program"))
 
-col3, col4, col5 = st.columns(3)
-with col3:
-    tarif_ht = st.number_input("Tarif HT", step=1.0)
-with col4:
-    tva = st.number_input("TVA", step=1.0)
-with col5:
-    tarif_ttc = st.number_input("Tarif TTC", step=1.0)
+programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
+    "Plages du Débarquement - Secteur US",
+    "Plages du Débarquement - Secteur US/GB",
+    "Plages du Débarquement - Secteur GB",
+    "Plages du Débarquement - Secteur Canadien",
+    "Mont Saint Michel",
+    "Vieux Bayeux & Cathédrale",
+    "Médiéval",
+    "Autre"
+])
 
-# Enregistrement dans un fichier Excel à une ligne
-if st.button("📄 Générer fichier Excel"):
-    df = pd.DataFrame([{
-        "DATE DEMANDE": date_demande.strftime("%d/%m/%Y"),
-        "REFERENCE": reference,
-        "DATE": date_visite.strftime("%d/%m/%Y"),
-        "demande": institution,
-        "INSTITUTION": institution,
-        "TITRE": titre,
-        "NOM": nom,
-        "PRENOM": prenom,
-        "ADRESSE": adresse,
-        "ADRESSE 2": adresse2,
-        "CODE POSTALE": code_postal,
-        "COMMUNE": commune,
-        "PAYS": pays,
-        "TEL": tel,
-        "MAIL": mail,
-        "Nombre de personnes": nb_pers,
-        "niveau scolaire": niveau,
-        "Langue": langue,
-        "Capacité max": capacite,
-        "NOM CLIENTS": nom_clients,
-        "H DEBUT": h_debut,
-        "LIEU DEBUT": lieu_debut,
-        "H FIN": h_fin,
-        "LIEU FIN": lieu_fin,
-        "Durée": duree,
-        "tarif ht": tarif_ht,
-        "tva": tva,
-        "tarif TTC": tarif_ttc
-    }])
-        vip = st.checkbox("Visite VIP")
+autre_programme = ""
+if programme == "Autre":
+    autre_programme = st.text_area(t("Décrivez le programme souhaité", "Describe the requested program"))
+
+# Visite VIP
+st.markdown("### " + t("Option VIP", "VIP option"))
+vip = st.checkbox(t("Visite VIP", "VIP tour"))
+vip_details = ""
 if vip:
-    st.text_input("Nom du contact VIP")
-    st.text_area("Instructions particulières")
-langue_secondaire = st.selectbox("Langue secondaire", ["", "Français", "Anglais"])
-          dates_multiples = st.date_input("Dates prévues", value=[], help="Maintenez Ctrl pour en sélectionner plusieurs")
-       
+    vip_details = st.text_area(t("Informations particulières", "Special instructions"))
 
+# Guide ou chauffeur-guide
+st.markdown("### " + t("Type de prestation", "Type of service"))
+type_guide = st.radio(t("Choisissez", "Choose"), [t("Guide seul", "Guide only"), t("Chauffeur-guide", "Driver-guide")])
 
+# Tarif
+st.markdown("### " + t("Tarifs", "Rates"))
+col3, col4 = st.columns(2)
+with col3:
+    tarif_ht1 = st.number_input(t("Tarif HT (part 1)", "Net rate (part 1)"), min_value=0.0, step=0.01)
+    tva1 = st.number_input("TVA 1 (%)", value=20 if type_guide == "Chauffeur-guide" else 10)
+with col4:
+    tarif_ht2 = st.number_input(t("Tarif HT (part 2)", "Net rate (part 2)"), min_value=0.0, step=0.01)
+    tva2 = st.number_input("TVA 2 (%)", value=10 if type_guide == "Chauffeur-guide" else 0)
 
-    output_file = "formulaire_nettoye.xlsx"
-    df.to_excel(output_file, index=False)
-    st.success(f"✅ Fichier '{output_file}' généré avec succès.")
-    with open(output_file, "rb") as f:
-        st.download_button("⬇️ Télécharger le fichier Excel", f, file_name=output_file)
+tarif_ttc = round(tarif_ht1 * (1 + tva1 / 100) + tarif_ht2 * (1 + tva2 / 100), 2)
+
+st.success(f"💰 {t('Tarif TTC estimé', 'Estimated total with tax')} : {tarif_ttc:.2f}")
+
+# Export Excel
+st.markdown("### " + t("Génération de fichier", "File generation"))
+
+if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
+    infos = {
+        "Date de demande": date_demande.strftime("%Y-%m-%d"),
+        "Référence": reference,
+        "Date de visite": date_visite.strftime("%Y-%m-%d"),
+        "Institution": institution,
+        "Nom": nom,
+        "Prénom": prenom,
+        "Adresse": adresse,
+        "Adresse 2": adresse2,
+        "Code postal": code_postal,
+        "Commune": ville,
+        "Pays": pays,
+        "Téléphone": telephone,
+        "Email": email,
+        "Nombre de personnes": nb_pers,
+        "Niveau scolaire": niveau,
+        "Langue de la visite": langue_visite,
+        "Programme": programme if programme != "Autre" else autre_programme,
+        "VIP": "Oui" if vip else "Non",
+        "Détails VIP": vip_details,
+        "Type de prestation": type_guide,
+        "Tarif HT 1": tarif_ht1,
+        "TVA 1": tva1,
+        "Tarif HT 2": tarif_ht2,
+        "TVA 2": tva2,
+        "Tarif TTC": tarif_ttc
+    }
+
+    df = pd.DataFrame([infos])
+    file_name = "formulaire_nettoye.xlsx"
+    df.to_excel(file_name, index=False)
+    with open(file_name, "rb") as f:
+        st.download_button(label=t("📥 Télécharger le fichier", "📥 Download file"),
+                           data=f,
+                           file_name=file_name)
+
 
