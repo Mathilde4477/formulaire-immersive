@@ -10,7 +10,7 @@ st.title("📋 Formulaire de réservation Immersive Normandy")
 # Choix de la langue
 langue = st.radio("Langue / Language", ["Français", "English"])
 
-# Fonctions pour la traduction
+# Fonction de traduction
 def t(fr, en):
     return fr if langue == "Français" else en
 
@@ -50,9 +50,7 @@ programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
     "Autre"
 ])
 
-autre_programme = ""
-if programme == "Autre":
-    autre_programme = st.text_area(t("Décrivez le programme souhaité", "Describe the requested program"))
+description_programme = st.text_area(t("Commentaires ou précisions sur le programme", "Additional notes or description"))
 
 # Visite VIP
 st.markdown("### " + t("Option VIP", "VIP option"))
@@ -69,11 +67,13 @@ type_guide = st.radio(t("Choisissez", "Choose"), [t("Guide seul", "Guide only"),
 st.markdown("### " + t("Tarifs", "Rates"))
 col3, col4 = st.columns(2)
 with col3:
-    tarif_ht1 = st.number_input(t("Tarif HT (part 1)", "Net rate (part 1)"), min_value=0.0, step=0.01)
-    tva1 = st.number_input("TVA 1 (%)", value=20 if type_guide == "Chauffeur-guide" else 10)
+    tarif_ht1 = st.number_input(t("Tarif guidage HT", "Guiding net rate"), min_value=0.0, step=0.01)
+    tva1 = st.number_input("TVA guidage (%)", value=20 if type_guide == "Chauffeur-guide" else 10)
+    st.caption(f"{t('Taux de TVA appliqué pour le guidage', 'Applied VAT rate for guiding')}: {tva1}%")
 with col4:
-    tarif_ht2 = st.number_input(t("Tarif HT (part 2)", "Net rate (part 2)"), min_value=0.0, step=0.01)
-    tva2 = st.number_input("TVA 2 (%)", value=10 if type_guide == "Chauffeur-guide" else 0)
+    tarif_ht2 = st.number_input(t("Tarif chauffeur HT", "Driver net rate"), min_value=0.0, step=0.01)
+    tva2 = st.number_input("TVA chauffeur (%)", value=10 if type_guide == "Chauffeur-guide" else 0)
+    st.caption(f"{t('Taux de TVA appliqué pour le chauffeur', 'Applied VAT rate for driver')}: {tva2}%")
 
 tarif_ttc = round(tarif_ht1 * (1 + tva1 / 100) + tarif_ht2 * (1 + tva2 / 100), 2)
 
@@ -100,14 +100,15 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Nombre de personnes": nb_pers,
         "Niveau scolaire": niveau,
         "Langue de la visite": langue_visite,
-        "Programme": programme if programme != "Autre" else autre_programme,
+        "Programme": programme,
+        "Description programme": description_programme,
         "VIP": "Oui" if vip else "Non",
         "Détails VIP": vip_details,
         "Type de prestation": type_guide,
-        "Tarif HT 1": tarif_ht1,
-        "TVA 1": tva1,
-        "Tarif HT 2": tarif_ht2,
-        "TVA 2": tva2,
+        "Tarif guidage HT": tarif_ht1,
+        "TVA guidage": tva1,
+        "Tarif chauffeur HT": tarif_ht2,
+        "TVA chauffeur": tva2,
         "Tarif TTC": tarif_ttc
     }
 
@@ -118,5 +119,3 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         st.download_button(label=t("📥 Télécharger le fichier", "📥 Download file"),
                            data=f,
                            file_name=file_name)
-
-
