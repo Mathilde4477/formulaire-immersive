@@ -20,6 +20,8 @@ pays = st.text_input("Pays")
 telephone = st.text_input("Téléphone")
 email = st.text_input("Email")
 
+nom_clients = st.text_area("Nom des clients")
+
 # Champs visite
 langue = st.selectbox("Langue", ["Français", "Anglais"])
 niveau_scolaire = st.text_input("Niveau scolaire")
@@ -63,6 +65,7 @@ except:
 
 # VIP
 vip = st.checkbox("Visite VIP ?")
+texte_vip = st.text_area("Informations supplémentaires en cas de VIP") if vip else ""
 
 # Données
 ligne = {
@@ -91,11 +94,13 @@ ligne = {
     "Durée": duree,
     "Type de visite": type_visite,
     "VIP": "Oui" if vip else "Non",
+    "Texte VIP": texte_vip,
     "Tarif guidage HT": f"{tarif_guidage:.2f}",
     "TVA guidage (20%)": f"{tva_guidage:.2f}",
     "Tarif chauffeur HT": f"{tarif_chauffeur:.2f}",
     "TVA chauffeur (10%)": f"{tva_chauffeur:.2f}",
-    "Tarif TTC": f"{tarif_ttc:.2f}"
+    "Tarif TTC": f"{tarif_ttc:.2f}",
+    "Nom clients": nom_clients
 }
 
 # Export Excel
