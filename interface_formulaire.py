@@ -50,6 +50,7 @@ description_programme = st.text_area(t("Commentaires ou précisions sur le progr
 
 # Horaires
 st.markdown("### " + t("Horaires de la visite", "Tour schedule"))
+
 col3, col4 = st.columns(2)
 with col3:
     h_debut = st.text_input(t("Heure de début", "Start time"))
@@ -57,6 +58,19 @@ with col3:
 with col4:
     h_fin = st.text_input(t("Heure de fin", "End time"))
     lieu_fin = st.text_input(t("Lieu de fin", "End location"))
+
+# Calcul de durée
+try:
+    fmt = "%H:%M"
+    h1 = datetime.strptime(h_debut.strip(), fmt)
+    h2 = datetime.strptime(h_fin.strip(), fmt)
+    delta = (h2 - h1).seconds / 3600
+    duree = round(delta, 2)
+    st.info(f"⏱️ {t('Durée estimée', 'Estimated duration')}: {duree} heures")
+except:
+    duree = ""
+    st.warning(t("Durée non calculable – format attendu HH:MM", "Duration could not be calculated – expected format HH:MM"))
+
 
 # Option VIP
 st.markdown("### " + t("Option VIP", "VIP option"))
@@ -75,13 +89,17 @@ col5, col6 = st.columns(2)
 with col5:
     tarif_ht1 = st.number_input(t("Tarif guidage HT", "Guiding net rate"), min_value=0.0, step=0.01)
     tva1 = 20.0
+    montant_tva1 = round(tarif_ht1 * tva1 / 100, 2)
     st.caption(f"{t('Taux de TVA appliqué pour le guidage', 'Applied VAT rate for guiding')}: {tva1}%")
+    st.text_input("TVA guidage (€)", value=f"{montant_tva1:.2f}", disabled=True)
 with col6:
     tarif_ht2 = st.number_input(t("Tarif chauffeur HT", "Driver net rate"), min_value=0.0, step=0.01)
     tva2 = 10.0
+    montant_tva2 = round(tarif_ht2 * tva2 / 100, 2)
     st.caption(f"{t('Taux de TVA appliqué pour le chauffeur', 'Applied VAT rate for driver')}: {tva2}%")
+    st.text_input("TVA chauffeur (€)", value=f"{montant_tva2:.2f}", disabled=True)
 
-tarif_ttc = round(tarif_ht1 * (1 + tva1 / 100) + tarif_ht2 * (1 + tva2 / 100), 2)
+tarif_ttc = round(tarif_ht1 + montant_tva1 + tarif_ht2 + montant_tva2, 2)
 st.success(f"💰 {t('Tarif TTC estimé', 'Estimated total with tax')} : {tarif_ttc:.2f}")
 
 # Export Excel
@@ -115,9 +133,12 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Détails VIP": vip_details,
         "Type de prestation": type_guide,
         "Tarif guidage HT": tarif_ht1,
-        "TVA guidage": tva1,
+        "TVA guidage (%)": tva1,
+        "Montant TVA guidage (€)": montant_tva1,
         "Tarif chauffeur HT": tarif_ht2,
-        "TVA chauffeur": tva2,
+        "TVA chauffeur (%)": tva2,
+        "Montant TVA chauffeur (€)": montant_tva2,
+        "Durée estimée (h)": duree,
         "Tarif TTC": tarif_ttc
     }
 
