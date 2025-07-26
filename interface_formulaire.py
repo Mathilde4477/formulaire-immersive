@@ -1,3 +1,4 @@
+from fpdf import FPDF
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -31,7 +32,9 @@ with col2:
     institution = st.text_input(t("Institution / Agence", "Institution / Agency"))
 
 # Coordonnées client
-titre = st.selectbox(t("Titre", "Title"), ["", "Monsieur", "Madame", "Mademoiselle"])
+titre_options_fr = ["", "M.", "Mme", "Mlle"]
+titre_options_en = ["", "Mr", "Mrs", "Miss"]
+titre = st.selectbox(t("Titre", "Title"), titre_options_fr if langue == "Français" else titre_options_en)
 nom = st.text_input(t("Nom", "Last name"))
 prenom = st.text_input(t("Prénom", "First name"))
 adresse = st.text_input(t("Adresse", "Address"))
@@ -45,11 +48,11 @@ nom_client = st.text_input(t("Nom du client", "Client name"))
 nb_pers = st.number_input(t("Nombre de personnes", "Number of people"), min_value=1, value=2)
 niveau = st.text_input(t("Niveau scolaire (le cas échéant)", "School level (if applicable)"))
 capacite_max = st.number_input(t("Capacité max de visite", "Max group capacity"), min_value=1, value=30)
-langue_visite = st.selectbox(t("Langue de la visite", "Tour language"), ["Français", "Anglais", "Allemand", "Espagnol", "Autre"])
+langue_visite = st.selectbox(t("Langue de la visite", "Tour language"), ["Français", "Anglais", "Allemand", "Espagnol", "Autre"] if langue == "Français" else ["French", "English", "German", "Spanish", "Other"])
 
 # Programme
 st.markdown("### " + t("Programme de la journée", "Tour program"))
-programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
+programmes_fr = [
     "Plages du Débarquement - Secteur US",
     "Plages du Débarquement - Secteur US/GB",
     "Plages du Débarquement - Secteur GB",
@@ -58,7 +61,18 @@ programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
     "Vieux Bayeux & Cathédrale",
     "Médiéval",
     "Autre"
-])
+]
+programmes_en = [
+    "D-Day Beaches - US Sector",
+    "D-Day Beaches - US/UK Sector",
+    "D-Day Beaches - UK Sector",
+    "D-Day Beaches - Canadian Sector",
+    "Mont Saint Michel",
+    "Old Bayeux & Cathedral",
+    "Medieval",
+    "Other"
+]
+programme = st.selectbox(t("Choisissez un programme", "Select a program"), programmes_fr if langue == "Français" else programmes_en)
 description_programme = st.text_area(t("Commentaires ou précisions sur le programme", "Additional notes or description"))
 
 # Horaires
@@ -119,6 +133,34 @@ st.success(f"💰 {t('Tarif TTC estimé', 'Estimated total with tax')} : {tarif_
 st.markdown("### " + t("Génération de fichier", "File generation"))
 
 if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
+    # Création d’un PDF de confirmation
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+# Ajout du logo Immersive Normandy
+    logo_path = "logo_immersive.png"
+    if os.path.exists(logo_path):
+        pdf.image(logo_path, x=10, y=8, w=40)
+        pdf.ln(25)
+
+    pdf.cell(200, 10, txt="Récapitulatif de la demande Immersive Normandy", ln=True, align='C')
+    pdf.ln(10)
+
+    for key, value in infos.items():
+        pdf.multi_cell(0, 10, txt=f"{key} : {value}")
+
+    # Nom de base du fichier PDF selon les informations
+    nom_base = reference
+    if institution:
+        nom_base += f"_{institution.replace(' ', '_')}"
+    elif nom and prenom:
+        nom_base += f"_{nom.replace(' ', '_')}_{prenom.replace(' ', '_')}"
+
+    pdf_file = os.path.join(export_dir, f"{nom_base}_{horodatage}.pdf")
+    pdf.output(pdf_file)
+    st.success("✅ " + t("Formulaire sauvegardé", "Form successfully saved"))
+    st.toast(t("Formulaire prêt pour une nouvelle saisie", "Ready for a new entry"))
+    st.experimental_rerun()
     infos = {
         "Date de demande": date_demande.strftime("%Y-%m-%d"),
         "Référence": reference,
@@ -159,7 +201,12 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
     }
 
     df = pd.DataFrame([infos])
-    file_name = "formulaire_nettoye.xlsx"
+    # Création du dossier export si nécessaire
+    export_dir = "exports"
+    os.makedirs(export_dir, exist_ok=True)
+
+    horodatage = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = os.path.join(export_dir, f"formulaire_nettoye_{horodatage}.xlsx")
     df.to_excel(file_name, index=False)
     with open(file_name, "rb") as f:
         st.download_button(label=t("📥 Télécharger le fichier", "📥 Download file"),
