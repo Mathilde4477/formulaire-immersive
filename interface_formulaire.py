@@ -4,6 +4,8 @@ from fpdf import FPDF
 import pandas as pd
 import os
 import datetime
+import locale
+locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
 
 date_demande = st.date_input("📅 Date de la demande", value=datetime.date.today())
 date_visite = st.date_input("📆 Date de la visite")
@@ -77,8 +79,9 @@ ligne = {
     "Référence": reference,
     "Institution": institution,
     "Titre": titre,
-        "Date de la demande": date_demande,
-        "Date de la visite": date_visite,
+        "Date de la demande": date_demande.strftime("%A %d %B %Y").capitalize(),
+        "Date de la visite": date_visite.strftime("%A %d %B %Y").capitalize(),
+
     "Nom": nom,
     "Prénom": prenom,
     "Adresse": adresse,
