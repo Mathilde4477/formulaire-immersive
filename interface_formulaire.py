@@ -1,15 +1,11 @@
+langue_ui = "Français"  # Valeur par défaut en cas de bug
 
 import streamlit as st
 from fpdf import FPDF
 import pandas as pd
 import os
-import datetime
 
-date_demande = st.date_input("📅 Date de la demande", value=datetime.date.today())
-date_visite = st.date_input("📆 Date de la visite")
-
-st.title("Formulaire Immersive - Version Française")
-
+st.title("Formulaire Immersive - Version Complète")
 
 # Champs d'identité
 reference = st.text_input("Référence")
@@ -32,17 +28,61 @@ langue = st.selectbox("Langue", ["Français", "Anglais"])
 niveau_scolaire = st.text_input("Niveau scolaire")
 nombre_personnes = st.number_input("Nombre de personnes", min_value=1, step=1)
 capacite_max = st.number_input("Capacité max", min_value=1, step=1)
-programme = st.selectbox("Programme", [
-    "Plages du Débarquement (secteur US)", 
+
+detail_programme = st.text_area("Champ libre programme")
+
+
+# Listes bilingues pour le programme
+    "Plages du Débarquement (secteur US)",
     "Plages du Débarquement (secteur GB)",
     "Plages du Débarquement (secteur Canadien)",
-    "Plages du Débarquement (US/GB)", 
+    "Plages du Débarquement (US/GB)",
     "Mont Saint Michel",
     "Vieux Bayeux et Cathédrale",
     "Médiéval",
     "Autre"
-])
-detail_programme = st.text_area("Champ libre programme")
+]
+
+    "D-Day beaches (US sector)",
+    "D-Day beaches (British sector)",
+    "D-Day beaches (Canadian sector)",
+    "D-Day beaches (US/GB)",
+    "Mont Saint Michel",
+    "Old Bayeux and Cathedral",
+    "Medieval",
+    "Other"
+]
+
+# Listes bilingues pour le programme
+    "Plages du Débarquement (secteur US)",
+    "Plages du Débarquement (secteur GB)",
+    "Plages du Débarquement (secteur Canadien)",
+    "Plages du Débarquement (US/GB)",
+    "Mont Saint Michel",
+    "Vieux Bayeux et Cathédrale",
+    "Médiéval",
+    "Autre"
+]
+    "Plages du Débarquement (secteur US)",
+    "Plages du Débarquement (secteur GB)",
+    "Plages du Débarquement (secteur Canadien)",
+    "Plages du Débarquement (US/GB)",
+    "Mont Saint Michel",
+    "Vieux Bayeux et Cathédrale",
+    "Médiéval",
+    "Autre"
+]
+    "D-Day beaches (US sector)",
+    "D-Day beaches (British sector)",
+    "D-Day beaches (Canadian sector)",
+    "D-Day beaches (US/GB)",
+    "Mont Saint Michel",
+    "Old Bayeux and Cathedral",
+    "Medieval",
+    "Other"
+]
+programme = st.selectbox("Programme", programme_fr if langue_ui == "Français" else programme_en)
+
 
 # Champs horaires
 heure_debut = st.selectbox("Heure de début", [f"{h:02d}:{m:02d}" for h in range(6, 21) for m in range(0, 60, 5)])
@@ -113,6 +153,7 @@ ligne = {
 # Export Excel
 if st.button("Exporter vers Excel"):
     df = pd.DataFrame([ligne])
+    df = df[['Date de la demande', 'Référence', 'Date de la visite', 'Titre', 'Nom', 'Prénom', 'Adresse', 'Adresse 2', 'Code postal', 'Commune', 'Pays', 'Téléphone', 'Email', 'Nom clients', 'Niveau scolaire', 'Nombre de personnes', 'Capacité max', 'Programme', 'Détail programme', 'Heure de début', 'Lieu de début', 'Heure de fin', 'Lieu de fin', 'Durée', 'Tarif guidage HT', 'TVA guidage (20%)', 'Tarif chauffeur HT', 'TVA chauffeur (10%)', 'Tarif TTC', 'VIP', 'Texte VIP']]
     fichier_excel = "formulaire_complet.xlsx"
     df.to_excel(fichier_excel, index=False)
     with open(fichier_excel, "rb") as f:
