@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import locale
 
 st.set_page_config(page_title="Formulaire de réservation", layout="centered")
 
@@ -38,7 +37,6 @@ langue_visite = st.selectbox(t("Langue de la visite", "Tour language"), ["Franç
 
 # Programme de la journée
 st.markdown("### " + t("Programme de la journée", "Tour program"))
-
 programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
     "Plages du Débarquement - Secteur US",
     "Plages du Débarquement - Secteur US/GB",
@@ -49,7 +47,6 @@ programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
     "Médiéval",
     "Autre"
 ])
-
 description_programme = st.text_area(t("Commentaires ou précisions sur le programme", "Additional notes or description"))
 
 # Visite VIP
