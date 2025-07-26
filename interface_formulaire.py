@@ -6,14 +6,12 @@ st.set_page_config(page_title="Formulaire de réservation", layout="centered")
 
 st.title("📋 Formulaire de réservation Immersive Normandy")
 
-# Choix de la langue
 langue = st.radio("Langue / Language", ["Français", "English"])
 
-# Fonction de traduction
 def t(fr, en):
     return fr if langue == "Français" else en
 
-# Données générales
+# Infos principales
 col1, col2 = st.columns(2)
 with col1:
     date_demande = st.date_input(t("Date de la demande", "Request date"))
@@ -22,6 +20,7 @@ with col2:
     date_visite = st.date_input(t("Date de la visite", "Visit date"))
     institution = st.text_input(t("Institution / Agence", "Institution / Agency"))
 
+# Coordonnées client
 nom = st.text_input(t("Nom", "Last name"))
 prenom = st.text_input(t("Prénom", "First name"))
 adresse = st.text_input(t("Adresse", "Address"))
@@ -35,7 +34,7 @@ nb_pers = st.number_input(t("Nombre de personnes", "Number of people"), min_valu
 niveau = st.text_input(t("Niveau scolaire (le cas échéant)", "School level (if applicable)"))
 langue_visite = st.selectbox(t("Langue de la visite", "Tour language"), ["Français", "Anglais", "Allemand", "Espagnol", "Autre"])
 
-# Programme de la journée
+# Programme
 st.markdown("### " + t("Programme de la journée", "Tour program"))
 programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
     "Plages du Débarquement - Secteur US",
@@ -49,7 +48,17 @@ programme = st.selectbox(t("Choisissez un programme", "Select a program"), [
 ])
 description_programme = st.text_area(t("Commentaires ou précisions sur le programme", "Additional notes or description"))
 
-# Visite VIP
+# Horaires
+st.markdown("### " + t("Horaires de la visite", "Tour schedule"))
+col3, col4 = st.columns(2)
+with col3:
+    h_debut = st.text_input(t("Heure de début", "Start time"))
+    lieu_debut = st.text_input(t("Lieu de début", "Start location"))
+with col4:
+    h_fin = st.text_input(t("Heure de fin", "End time"))
+    lieu_fin = st.text_input(t("Lieu de fin", "End location"))
+
+# Option VIP
 st.markdown("### " + t("Option VIP", "VIP option"))
 vip = st.checkbox(t("Visite VIP", "VIP tour"))
 vip_details = ""
@@ -60,20 +69,19 @@ if vip:
 st.markdown("### " + t("Type de prestation", "Type of service"))
 type_guide = st.radio(t("Choisissez", "Choose"), [t("Guide seul", "Guide only"), t("Chauffeur-guide", "Driver-guide")])
 
-# Tarif
+# Tarifs avec TVA automatiques
 st.markdown("### " + t("Tarifs", "Rates"))
-col3, col4 = st.columns(2)
-with col3:
+col5, col6 = st.columns(2)
+with col5:
     tarif_ht1 = st.number_input(t("Tarif guidage HT", "Guiding net rate"), min_value=0.0, step=0.01)
-    tva1 = st.number_input("TVA guidage (%)", value=20 if type_guide == "Chauffeur-guide" else 10)
+    tva1 = 20.0
     st.caption(f"{t('Taux de TVA appliqué pour le guidage', 'Applied VAT rate for guiding')}: {tva1}%")
-with col4:
+with col6:
     tarif_ht2 = st.number_input(t("Tarif chauffeur HT", "Driver net rate"), min_value=0.0, step=0.01)
-    tva2 = st.number_input("TVA chauffeur (%)", value=10 if type_guide == "Chauffeur-guide" else 0)
+    tva2 = 10.0
     st.caption(f"{t('Taux de TVA appliqué pour le chauffeur', 'Applied VAT rate for driver')}: {tva2}%")
 
 tarif_ttc = round(tarif_ht1 * (1 + tva1 / 100) + tarif_ht2 * (1 + tva2 / 100), 2)
-
 st.success(f"💰 {t('Tarif TTC estimé', 'Estimated total with tax')} : {tarif_ttc:.2f}")
 
 # Export Excel
@@ -99,6 +107,10 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Langue de la visite": langue_visite,
         "Programme": programme,
         "Description programme": description_programme,
+        "Heure début": h_debut,
+        "Lieu début": lieu_debut,
+        "Heure fin": h_fin,
+        "Lieu fin": lieu_fin,
         "VIP": "Oui" if vip else "Non",
         "Détails VIP": vip_details,
         "Type de prestation": type_guide,
