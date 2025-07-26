@@ -10,6 +10,13 @@ date_visite = st.date_input("📆 Date de la visite")
 
 st.title("Formulaire Immersive - Version Française")
 
+def formater_date_fr(date):
+    jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
+    mois = ["janvier", "février", "mars", "avril", "mai", "juin",
+            "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+    jour_semaine = jours[date.weekday()]
+    return f"{jour_semaine.capitalize()} {date.day} {mois[date.month - 1]} {date.year}"
+
 
 # Champs d'identité
 reference = st.text_input("Référence")
@@ -74,11 +81,10 @@ texte_vip = st.text_area("Informations supplémentaires en cas de VIP") if vip e
 
 # Données
 ligne = {
+    "Date de la demande": formater_date_fr(date_demande),
     "Référence": reference,
-    "Institution": institution,
+    "Date de la visite": formater_date_fr(date_visite),
     "Titre": titre,
-        "Date de la demande": date_demande,
-        "Date de la visite": date_visite,
     "Nom": nom,
     "Prénom": prenom,
     "Adresse": adresse,
@@ -88,10 +94,11 @@ ligne = {
     "Pays": pays,
     "Téléphone": telephone,
     "Email": email,
-    "Langue": langue,
+    "Nom clients": nom_clients,
     "Niveau scolaire": niveau_scolaire,
     "Nombre de personnes": nombre_personnes,
     "Capacité max": capacite_max,
+    "Langue": langue,
     "Programme": programme,
     "Détail programme": detail_programme,
     "Heure de début": heure_debut,
@@ -100,20 +107,19 @@ ligne = {
     "Lieu de fin": lieu_fin,
     "Durée": duree,
     "Type de visite": type_visite,
-    "VIP": "Oui" if vip else "Non",
-    "Texte VIP": texte_vip,
     "Tarif guidage HT": f"{tarif_guidage:.2f}",
     "TVA guidage (20%)": f"{tva_guidage:.2f}",
     "Tarif chauffeur HT": f"{tarif_chauffeur:.2f}",
     "TVA chauffeur (10%)": f"{tva_chauffeur:.2f}",
     "Tarif TTC": f"{tarif_ttc:.2f}",
-    "Nom clients": nom_clients
+    "VIP": "Oui" if vip else "Non",
+    "Texte VIP": texte_vip
 }
 
 # Export Excel
 if st.button("Exporter vers Excel"):
     df = pd.DataFrame([ligne])
-    df = df[['Date de la demande', 'Référence', 'Date de la visite', 'Titre', 'Nom', 'Prénom', 'Adresse', 'Adresse 2', 'Code postal', 'Commune', 'Pays', 'Téléphone', 'Email', 'Nom clients', 'Niveau scolaire', 'Nombre de personnes', 'Capacité max', 'Programme', 'Détail programme', 'Heure de début', 'Lieu de début', 'Heure de fin', 'Lieu de fin', 'Durée', 'Tarif guidage HT', 'TVA guidage (20%)', 'Tarif chauffeur HT', 'TVA chauffeur (10%)', 'Tarif TTC', 'VIP', 'Texte VIP']]
+    df = df[['Date de la demande', 'Référence', 'Date de la visite', 'Titre', 'Nom', 'Prénom', 'Adresse', 'Adresse 2', 'Code postal', 'Commune', 'Pays', 'Téléphone', 'Email', 'Nom clients', 'Niveau scolaire', 'Nombre de personnes', 'Capacité max', 'Langue', 'Programme', 'Détail programme', 'Heure de début', 'Lieu de début', 'Heure de fin', 'Lieu de fin', 'Durée', 'Tarif guidage HT', 'TVA guidage (20%)', 'Tarif chauffeur HT', 'TVA chauffeur (10%)', 'Tarif TTC', 'VIP', 'Texte VIP']]
     fichier_excel = "formulaire_complet.xlsx"
     df.to_excel(fichier_excel, index=False)
     with open(fichier_excel, "rb") as f:
