@@ -12,7 +12,7 @@ def select_time(label):
     with col_h:
         hour = st.selectbox(f"{label} - heure", [f"{i:02}" for i in range(0, 24)], key=f"{label}_h")
     with col_m:
-        minute = st.selectbox(f"{label} - minute", ["00", "15", "30", "45"], key=f"{label}_m")
+        minute = st.selectbox(f"{label} - minute", [f"{i:02}" for i in range(0, 60, 5)], key=f"{label}_m")
     return f"{hour}:{minute}"
 
 
