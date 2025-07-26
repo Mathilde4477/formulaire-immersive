@@ -104,13 +104,13 @@ with col5:
     tva1 = 20.0
     montant_tva1 = round(tarif_ht1 * tva1 / 100, 2)
     st.caption(f"{t('Taux de TVA appliqué pour le guidage', 'Applied VAT rate for guiding')}: {tva1}%")
-    st.text_input("TVA guidage (€)", value=f"{montant_tva1:.2f}", disabled=True)
+    st.text_input("Montant TVA guidage", value=f"{montant_tva1:.2f}", disabled=True)
 with col6:
     tarif_ht2 = st.number_input(t("Tarif chauffeur HT", "Driver net rate"), min_value=0.0, step=0.01)
     tva2 = 10.0
     montant_tva2 = round(tarif_ht2 * tva2 / 100, 2)
     st.caption(f"{t('Taux de TVA appliqué pour le chauffeur', 'Applied VAT rate for driver')}: {tva2}%")
-    st.text_input("TVA chauffeur (€)", value=f"{montant_tva2:.2f}", disabled=True)
+    st.text_input("Montant TVA chauffeur", value=f"{montant_tva2:.2f}", disabled=True)
 
 tarif_ttc = round(tarif_ht1 + montant_tva1 + tarif_ht2 + montant_tva2, 2)
 st.success(f"💰 {t('Tarif TTC estimé', 'Estimated total with tax')} : {tarif_ttc:.2f}")
@@ -150,10 +150,10 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Type de prestation": type_guide,
         "Tarif guidage HT": tarif_ht1,
         "Taux TVA guidage (%)": tva1,
-        "TVA guidage (€)": montant_tva1,
+        "Montant TVA guidage": montant_tva1,
         "Tarif chauffeur HT": tarif_ht2,
         "Taux TVA chauffeur (%)": tva2,
-        "TVA chauffeur (€)": montant_tva2,
+        "Montant TVA chauffeur": montant_tva2,
         "Durée estimée (h)": duree,
         "Tarif TTC": tarif_ttc
     }
