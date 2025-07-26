@@ -79,6 +79,7 @@ if st.button("📄 Générer fichier Excel"):
         "tarif ht": tarif_ht,
         "tva": tva,
         "tarif TTC": tarif_ttc
+    }])
         vip = st.checkbox("Visite VIP")
 if vip:
     st.text_input("Nom du contact VIP")
@@ -87,7 +88,7 @@ langue_secondaire = st.selectbox("Langue secondaire", ["", "Français", "Anglais
           dates_multiples = st.date_input("Dates prévues", value=[], help="Maintenez Ctrl pour en sélectionner plusieurs")
        
 
-    }])
+
 
     output_file = "formulaire_nettoye.xlsx"
     df.to_excel(output_file, index=False)
