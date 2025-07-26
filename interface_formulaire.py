@@ -31,6 +31,7 @@ with col2:
     institution = st.text_input(t("Institution / Agence", "Institution / Agency"))
 
 # Coordonnées client
+titre = st.selectbox(t("Titre", "Title"), ["", "Monsieur", "Madame", "Mademoiselle"])
 nom = st.text_input(t("Nom", "Last name"))
 prenom = st.text_input(t("Prénom", "First name"))
 adresse = st.text_input(t("Adresse", "Address"))
@@ -123,6 +124,7 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Référence": reference,
         "Date de visite": date_visite.strftime("%Y-%m-%d"),
         "Institution": institution,
+        "Titre": titre,
         "Nom": nom,
         "Prénom": prenom,
         "Adresse": adresse,
@@ -148,16 +150,16 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
         "Type de prestation": type_guide,
         "Tarif guidage HT": tarif_ht1,
         "Taux TVA guidage (%)": tva1,
-        "Montant TVA guidage (€)": montant_tva1,
+        "TVA guidage (€)": montant_tva1,
         "Tarif chauffeur HT": tarif_ht2,
         "Taux TVA chauffeur (%)": tva2,
-        "Montant TVA chauffeur (€)": montant_tva2,
+        "TVA chauffeur (€)": montant_tva2,
         "Durée estimée (h)": duree,
         "Tarif TTC": tarif_ttc
     }
 
     df = pd.DataFrame([infos])
-    file_name = f"{reference}_{nom_client.replace(" ", "_")}.xlsx" if reference and nom_client else "formulaire_nettoye.xlsx"
+    file_name = "formulaire_nettoye.xlsx"
     df.to_excel(file_name, index=False)
     with open(file_name, "rb") as f:
         st.download_button(label=t("📥 Télécharger le fichier", "📥 Download file"),
