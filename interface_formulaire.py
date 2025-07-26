@@ -13,10 +13,6 @@ def select_time(label):
     return st.selectbox(label, times)
 
 
-
-
-
-
     langue = st.radio("Langue / Language", ["Français", "English"])
 
     def t(fr, en):
