@@ -8,12 +8,12 @@ st.title("📋 Formulaire de réservation Immersive Normandy")
 
 
 def select_time(label):
-    col_h, col_m = st.columns([2, 1])
-    with col_h:
-        hour = st.selectbox(f"{label} - heure", [f"{i:02}" for i in range(0, 24)], key=f"{label}_h")
-    with col_m:
-        minute = st.selectbox(f"{label} - minute", [f"{i:02}" for i in range(0, 60, 5)], key=f"{label}_m")
-    return f"{hour}:{minute}"
+    times = [f"{h:02}:{m:02}" for h in range(24) for m in range(0, 60, 5)]
+    return st.selectbox(label, times)
+
+
+
+
 
 
 langue = st.radio("Langue / Language", ["Français", "English"])
