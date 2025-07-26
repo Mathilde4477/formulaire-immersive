@@ -65,6 +65,16 @@ programme_fr = [
     "Médiéval",
     "Autre"
 ]
+programme_fr = [
+    "Plages du Débarquement (secteur US)",
+    "Plages du Débarquement (secteur GB)",
+    "Plages du Débarquement (secteur Canadien)",
+    "Plages du Débarquement (US/GB)",
+    "Mont Saint Michel",
+    "Vieux Bayeux et Cathédrale",
+    "Médiéval",
+    "Autre"
+]
 programme_en = [
     "D-Day beaches (US sector)",
     "D-Day beaches (British sector)",
