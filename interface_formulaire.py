@@ -137,11 +137,7 @@ if st.button(t("📄 Générer fichier Excel", "📄 Generate Excel file")):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-# Ajout du logo Immersive Normandy
-    logo_path = "logo_immersive.png"
-    if os.path.exists(logo_path):
-        pdf.image(logo_path, x=10, y=8, w=40)
-        pdf.ln(25)
+# Ajout du logo Immersive Normandy        pdf.ln(25)
 
     pdf.cell(200, 10, txt="Récapitulatif de la demande Immersive Normandy", ln=True, align='C')
     pdf.ln(10)
