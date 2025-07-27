@@ -162,10 +162,11 @@ if st.button("Générer le PDF"):
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
     pdf.set_font("DejaVu", "", 12)
+    pdf.set_margins(15, 20)
     pdf.add_page()
 
     # --- Sections à remplir ---
-    pdf.section_title("🧾 Informations personnelles")
+    pdf.section_title("Informations personnelles")
     for key in ["Date de la demande", "Référence", "Date de la visite", "Institution", "Titre", "Nom", "Prénom", "Adresse", "Adresse 2", "Code postal", "Commune", "Pays", "Téléphone", "Email", "Nom clients"]:
         pdf.add_data(key, ligne.get(key, ""))
 
