@@ -132,16 +132,19 @@ if st.button("Générer le PDF"):
     pdf.set_margins(15, 20)
     pdf.add_page()
 
-# Logo
-pdf.image("logo.png", x=10, y=8, w=30)
-pdf.ln(25)
+    # Logo
+    pdf.image("logo.png", x=10, y=8, w=30)
+    pdf.ln(25)
 
-# Titre
-pdf.set_font("Times", 'B', 16)
-pdf.cell(0, 10, "Formulaire Immersive - Données", ln=True, align="C")
-pdf.ln(10)
+    pdf.set_font("Times", 'B', 16)
+    pdf.cell(0, 10, "Formulaire Immersive - Données", ln=True, align="C")
+    pdf.ln(10)
 
-# Texte
-pdf.set_font("Times", size=12)
-for key, value in ligne.items():
-    pdf.multi_cell(0, 10, f"{key} : {value}")
+    pdf.set_font("Times", size=12)
+    for key, value in ligne.items():
+        pdf.multi_cell(0, 10, f"{key} : {value}")
+
+    nom_fichier = f"formulaire_{reference or nom}_{institution or prenom}.pdf".replace(" ", "_")
+    pdf.output(nom_fichier)
+    with open(nom_fichier, "rb") as f:
+        st.download_button("Télécharger le PDF", f, nom_fichier, mime="application/pdf")
