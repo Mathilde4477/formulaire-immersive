@@ -127,24 +127,68 @@ if st.button("Exporter vers Excel"):
         st.download_button("Télécharger le fichier Excel", f, fichier_excel)
 
 # Export PDF
+from fpdf import FPDF
+
+class PDF(FPDF):
+    def header(self):
+        # Logo
+        self.image("logo.png", x=10, y=8, w=30)
+        self.set_font("Helvetica", 'B', 16)
+        self.set_text_color(0, 70, 140)
+        self.cell(0, 10, "Formulaire de réservation - Immersive Normandy", ln=True, align="C")
+        self.ln(20)
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font("Helvetica", "I", 8)
+        self.set_text_color(100)
+        self.cell(0, 10, f"Page {self.page_no()}", align="C")
+
+    def section_title(self, title):
+        self.set_font("Helvetica", "B", 12)
+        self.set_fill_color(230, 230, 230)
+        self.set_text_color(0)
+        self.cell(0, 10, title, ln=True, fill=True)
+        self.ln(2)
+
+    def add_data(self, label, value):
+        self.set_font("Helvetica", size=11)
+        self.set_text_color(50)
+        self.multi_cell(0, 8, f"{label} : {value}")
+        self.ln(1)
+
 if st.button("Générer le PDF"):
-    pdf = FPDF()
-    pdf.set_margins(15, 20)
+    pdf = PDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    # Logo
-    pdf.image("logo.png", x=10, y=8, w=30)
-    pdf.ln(25)
+    # --- Sections à remplir ---
+    pdf.section_title("🧾 Informations personnelles")
+    for key in ["Date de la demande", "Référence", "Date de la visite", "Institution", "Titre", "Nom", "Prénom", "Adresse", "Adresse 2", "Code postal", "Commune", "Pays", "Téléphone", "Email", "Nom clients"]:
+        pdf.add_data(key, ligne.get(key, ""))
 
-    pdf.set_font("Times", 'B', 16)
-    pdf.cell(0, 10, "Formulaire Immersive - Données", ln=True, align="C")
-    pdf.ln(10)
+    pdf.section_title("🎓 Visite scolaire")
+    for key in ["Langue", "Niveau scolaire", "Nombre de personnes", "Capacité max"]:
+        pdf.add_data(key, ligne.get(key, ""))
 
-    pdf.set_font("Times", size=12)
-    for key, value in ligne.items():
-        pdf.multi_cell(0, 10, f"{key} : {value}")
+    pdf.section_title("📍 Détails du programme")
+    for key in ["Programme", "Détail programme"]:
+        pdf.add_data(key, ligne.get(key, ""))
 
+    pdf.section_title("🕒 Horaires")
+    for key in ["Heure de début", "Lieu de début", "Heure de fin", "Lieu de fin", "Durée"]:
+        pdf.add_data(key, ligne.get(key, ""))
+
+    pdf.section_title("💰 Tarification")
+    for key in ["Type de visite", "Tarif guidage HT", "TVA guidage (20%)", "Tarif chauffeur HT", "TVA chauffeur (10%)", "Tarif TTC"]:
+        pdf.add_data(key, ligne.get(key, ""))
+
+    if ligne.get("VIP") == "Oui":
+        pdf.section_title("✨ VIP")
+        pdf.add_data("Informations VIP", ligne.get("Texte VIP", ""))
+
+    # Nom du fichier
     nom_fichier = f"formulaire_{reference or nom}_{institution or prenom}.pdf".replace(" ", "_")
     pdf.output(nom_fichier)
     with open(nom_fichier, "rb") as f:
-        st.download_button("Télécharger le PDF", f, nom_fichier, mime="application/pdf")
+        st.download_button("📄 Télécharger le PDF", f, nom_fichier, mime="application/pdf")
