@@ -158,40 +158,88 @@ class PDF(FPDF):
         self.ln(1)
 
 if st.button("Générer le PDF"):
-    pdf = PDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf = FPDF()
     pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
-    pdf.set_font("DejaVu", "", 12)
+    pdf.add_font("DejaVu", "B", "DejaVuSans-Bold.ttf", uni=True)
     pdf.set_margins(15, 20)
     pdf.add_page()
 
-    # --- Sections à remplir ---
-    pdf.section_title("Informations personnelles")
-    for key in ["Date de la demande", "Référence", "Date de la visite", "Institution", "Titre", "Nom", "Prénom", "Adresse", "Adresse 2", "Code postal", "Commune", "Pays", "Téléphone", "Email", "Nom clients"]:
-        pdf.add_data(key, ligne.get(key, ""))
+    # Logo centré
+    pdf.image("logo.png", x=80, y=8, w=50)
+    pdf.ln(40)
 
-    pdf.section_title("Visite scolaire")
-    for key in ["Langue", "Niveau scolaire", "Nombre de personnes", "Capacité max"]:
-        pdf.add_data(key, ligne.get(key, ""))
+    # Titre
+    pdf.set_font("DejaVu", "B", 16)
+    pdf.cell(0, 10, "Formulaire Immersive - Données", ln=True, align="C")
+    pdf.ln(10)
 
-    pdf.section_title("Détails du programme")
-    for key in ["Programme", "Détail programme"]:
-        pdf.add_data(key, ligne.get(key, ""))
+    # Thème : Informations personnelles
+    pdf.set_font("DejaVu", "B", 14)
+    pdf.cell(0, 10, "🧾 Informations personnelles", ln=True)
+    pdf.set_font("DejaVu", "", 12)
+    infos_perso = [
+        ("Date de la demande", date_demande.strftime("%A %d %B %Y")),
+        ("Date de la visite", date_visite.strftime("%A %d %B %Y")),
+        ("Référence", reference),
+        ("Institution", institution),
+        ("Titre", titre),
+        ("Nom", nom),
+        ("Prénom", prenom),
+        ("Adresse", adresse),
+        ("Adresse 2", adresse2),
+        ("Code postal", code_postal),
+        ("Commune", commune),
+        ("Pays", pays),
+        ("Téléphone", telephone),
+        ("Email", email),
+        ("Nom des clients", nom_clients)
+    ]
+    for champ, valeur in infos_perso:
+        pdf.cell(0, 10, f"{champ} : {valeur}", ln=True)
 
-    pdf.section_title("Horaires")
-    for key in ["Heure de début", "Lieu de début", "Heure de fin", "Lieu de fin", "Durée"]:
-        pdf.add_data(key, ligne.get(key, ""))
+    pdf.ln(5)
 
-    pdf.section_title("Tarification")
-    for key in ["Type de visite", "Tarif guidage HT", "TVA guidage (20%)", "Tarif chauffeur HT", "TVA chauffeur (10%)", "Tarif TTC"]:
-        pdf.add_data(key, ligne.get(key, ""))
+    # Thème : Détails de la visite
+    pdf.set_font("DejaVu", "B", 14)
+    pdf.cell(0, 10, "📌 Détails de la visite", ln=True)
+    pdf.set_font("DejaVu", "", 12)
+    visite = [
+        ("Langue", langue),
+        ("Niveau scolaire", niveau_scolaire),
+        ("Nombre de personnes", nombre_personnes),
+        ("Capacité max", capacite_max),
+        ("Programme", programme),
+        ("Détail programme", detail_programme),
+        ("Heure de début", heure_debut),
+        ("Lieu de début", lieu_debut),
+        ("Heure de fin", heure_fin),
+        ("Lieu de fin", lieu_fin),
+        ("Durée", duree),
+        ("VIP", "Oui" if vip else "Non"),
+        ("Informations VIP", texte_vip)
+    ]
+    for champ, valeur in visite:
+        pdf.cell(0, 10, f"{champ} : {valeur}", ln=True)
 
-    if ligne.get("VIP") == "Oui":
-        pdf.section_title("VIP")
-        pdf.add_data("Informations VIP", ligne.get("Texte VIP", ""))
+    pdf.ln(5)
 
-    # Nom du fichier
+    # Thème : Tarifs
+    pdf.set_font("DejaVu", "B", 14)
+    pdf.cell(0, 10, "💰 Tarifs", ln=True)
+    pdf.set_font("DejaVu", "", 12)
+    tarifs = [
+        ("Type de visite", type_visite),
+        ("Tarif guidage HT", f"{tarif_guidage:.2f} €"),
+        ("TVA guidage (20%)", f"{tva_guidage:.2f} €"),
+        ("Tarif chauffeur HT", f"{tarif_chauffeur:.2f} €"),
+        ("TVA chauffeur (10%)", f"{tva_chauffeur:.2f} €"),
+        ("Tarif TTC", f"{tarif_ttc:.2f} €")
+    ]
+    for champ, valeur in tarifs:
+        pdf.cell(0, 10, f"{champ} : {valeur}", ln=True)
+
+    # Génération du fichier
     nom_fichier = f"formulaire_{reference or nom}_{institution or prenom}.pdf".replace(" ", "_")
     pdf.output(nom_fichier)
     with open(nom_fichier, "rb") as f:
-        st.download_button("Télécharger le PDF", f, nom_fichier, mime="application/pdf")
+        st.download_button("📄 Télécharger le PDF", f, nom_fichier, mime="application/pdf")
