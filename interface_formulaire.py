@@ -128,9 +128,9 @@ if st.button("Exporter vers Excel"):
 
 # Export PDF
 if st.button("Générer le PDF"):
-pdf = FPDF()
-pdf.set_margins(15, 20)
-pdf.add_page()
+    pdf = FPDF()
+    pdf.set_margins(15, 20)
+    pdf.add_page()
 
 # Logo
 pdf.image("logo.png", x=10, y=8, w=30)
