@@ -129,54 +129,34 @@ if st.button("Exporter vers Excel"):
 # Export PDF
 from fpdf import FPDF
 
-class PDF(FPDF):
+class PDFWithBoxes(FPDF):
     def header(self):
-        # Logo
-        self.image("logo.png", x=10, y=8, w=30)
-        self.set_font("Helvetica", 'B', 16)
-        self.set_text_color(0, 70, 140)
+        # Logo centré
+        self.image("logo.png", x=80, y=8, w=50)
+        self.ln(40)
+        # Titre centré
+        self.set_font("Arial", "B", 16)
         self.cell(0, 10, "Formulaire de réservation - Immersive Normandy", ln=True, align="C")
-        self.ln(20)
+        self.ln(10)
 
-    def footer(self):
-        self.set_y(-15)
-        self.set_font("Helvetica", "I", 8)
-        self.set_text_color(100)
-        self.cell(0, 10, f"Page {self.page_no()}", align="C")
-
-    def section_title(self, title):
-        self.set_font("Helvetica", "B", 12)
-        self.set_fill_color(230, 230, 230)
-        self.set_text_color(0)
+    def section_box(self, title, data):
+        # En-tête de la section
+        self.set_fill_color(200, 220, 255)
+        self.set_font("Arial", "B", 13)
         self.cell(0, 10, title, ln=True, fill=True)
         self.ln(2)
-
-    def add_data(self, label, value):
-        self.set_font("Helvetica", size=11)
-        self.set_text_color(50)
-        self.multi_cell(0, 8, f"{label} : {value}")
-        self.ln(1)
+        # Contenu
+        self.set_font("Arial", "", 11)
+        for key, value in data:
+            value = str(value).replace("€", "EUR")  # Sécurité encodage
+            self.cell(60, 8, f"{key} :", border=1)
+            self.cell(0, 8, f"{value}", border=1, ln=True)
 
 if st.button("Générer le PDF"):
-    pdf = FPDF()
-    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
-    pdf.add_font("DejaVu", "B", "DejaVuSans-Bold.ttf", uni=True)
-    pdf.set_margins(15, 20)
+    pdf = PDFWithBoxes()
     pdf.add_page()
 
-    # Logo centré
-    pdf.image("logo.png", x=80, y=8, w=50)
-    pdf.ln(40)
-
-    # Titre
-    pdf.set_font("DejaVu", "B", 16)
-    pdf.cell(0, 10, "Formulaire Immersive - Données", ln=True, align="C")
-    pdf.ln(10)
-
-    # Thème : Informations personnelles
-    pdf.set_font("DejaVu", "B", 14)
-    pdf.cell(0, 10, "🧾 Informations personnelles", ln=True)
-    pdf.set_font("DejaVu", "", 12)
+    # Bloc : Informations personnelles
     infos_perso = [
         ("Date de la demande", date_demande.strftime("%A %d %B %Y")),
         ("Date de la visite", date_visite.strftime("%A %d %B %Y")),
@@ -194,16 +174,11 @@ if st.button("Générer le PDF"):
         ("Email", email),
         ("Nom des clients", nom_clients)
     ]
-    for champ, valeur in infos_perso:
-        pdf.cell(0, 10, f"{champ} : {valeur}", ln=True)
-
+    pdf.section_box("Informations personnelles", infos_perso)
     pdf.ln(5)
 
-    # Thème : Détails de la visite
-    pdf.set_font("DejaVu", "B", 14)
-    pdf.cell(0, 10, "📌 Détails de la visite", ln=True)
-    pdf.set_font("DejaVu", "", 12)
-    visite = [
+    # Bloc : Détails de la visite
+    details_visite = [
         ("Langue", langue),
         ("Niveau scolaire", niveau_scolaire),
         ("Nombre de personnes", nombre_personnes),
@@ -214,29 +189,28 @@ if st.button("Générer le PDF"):
         ("Lieu de début", lieu_debut),
         ("Heure de fin", heure_fin),
         ("Lieu de fin", lieu_fin),
-        ("Durée", duree),
-        ("VIP", "Oui" if vip else "Non"),
-        ("Informations VIP", texte_vip)
+        ("Durée", duree)
     ]
-    for champ, valeur in visite:
-        pdf.cell(0, 10, f"{champ} : {valeur}", ln=True)
-
+    pdf.section_box("Détails de la visite", details_visite)
     pdf.ln(5)
 
-    # Thème : Tarifs
-    pdf.set_font("DejaVu", "B", 14)
-    pdf.cell(0, 10, "💰 Tarifs", ln=True)
-    pdf.set_font("DejaVu", "", 12)
+    # Bloc : Tarifs
     tarifs = [
         ("Type de visite", type_visite),
-        ("Tarif guidage HT", f"{tarif_guidage:.2f} €"),
-        ("TVA guidage (20%)", f"{tva_guidage:.2f} €"),
-        ("Tarif chauffeur HT", f"{tarif_chauffeur:.2f} €"),
-        ("TVA chauffeur (10%)", f"{tva_chauffeur:.2f} €"),
-        ("Tarif TTC", f"{tarif_ttc:.2f} €")
+        ("Tarif guidage HT", f"{tarif_guidage:.2f} EUR"),
+        ("TVA guidage (20%)", f"{tva_guidage:.2f} EUR"),
+        ("Tarif chauffeur HT", f"{tarif_chauffeur:.2f} EUR"),
+        ("TVA chauffeur (10%)", f"{tva_chauffeur:.2f} EUR"),
+        ("Tarif TTC", f"{tarif_ttc:.2f} EUR")
     ]
-    for champ, valeur in tarifs:
-        pdf.cell(0, 10, f"{champ} : {valeur}", ln=True)
+    pdf.section_box("Tarifs", tarifs)
+    pdf.ln(5)
+
+    # Bloc VIP
+    if vip:
+        pdf.section_box("Informations VIP", [("VIP", "Oui"), ("Texte VIP", texte_vip)])
+    else:
+        pdf.section_box("Informations VIP", [("VIP", "Non")])
 
     # Génération du fichier
     nom_fichier = f"formulaire_{reference or nom}_{institution or prenom}.pdf".replace(" ", "_")
