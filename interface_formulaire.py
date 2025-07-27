@@ -170,28 +170,28 @@ if st.button("Générer le PDF"):
     for key in ["Date de la demande", "Référence", "Date de la visite", "Institution", "Titre", "Nom", "Prénom", "Adresse", "Adresse 2", "Code postal", "Commune", "Pays", "Téléphone", "Email", "Nom clients"]:
         pdf.add_data(key, ligne.get(key, ""))
 
-    pdf.section_title("🎓 Visite scolaire")
+    pdf.section_title("Visite scolaire")
     for key in ["Langue", "Niveau scolaire", "Nombre de personnes", "Capacité max"]:
         pdf.add_data(key, ligne.get(key, ""))
 
-    pdf.section_title("📍 Détails du programme")
+    pdf.section_title("Détails du programme")
     for key in ["Programme", "Détail programme"]:
         pdf.add_data(key, ligne.get(key, ""))
 
-    pdf.section_title("🕒 Horaires")
+    pdf.section_title("Horaires")
     for key in ["Heure de début", "Lieu de début", "Heure de fin", "Lieu de fin", "Durée"]:
         pdf.add_data(key, ligne.get(key, ""))
 
-    pdf.section_title("💰 Tarification")
+    pdf.section_title("Tarification")
     for key in ["Type de visite", "Tarif guidage HT", "TVA guidage (20%)", "Tarif chauffeur HT", "TVA chauffeur (10%)", "Tarif TTC"]:
         pdf.add_data(key, ligne.get(key, ""))
 
     if ligne.get("VIP") == "Oui":
-        pdf.section_title("✨ VIP")
+        pdf.section_title("VIP")
         pdf.add_data("Informations VIP", ligne.get("Texte VIP", ""))
 
     # Nom du fichier
     nom_fichier = f"formulaire_{reference or nom}_{institution or prenom}.pdf".replace(" ", "_")
     pdf.output(nom_fichier)
     with open(nom_fichier, "rb") as f:
-        st.download_button("📄 Télécharger le PDF", f, nom_fichier, mime="application/pdf")
+        st.download_button("Télécharger le PDF", f, nom_fichier, mime="application/pdf")
