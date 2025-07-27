@@ -160,6 +160,8 @@ class PDF(FPDF):
 if st.button("Générer le PDF"):
     pdf = PDF()
     pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+    pdf.set_font("DejaVu", "", 12)
     pdf.add_page()
 
     # --- Sections à remplir ---
